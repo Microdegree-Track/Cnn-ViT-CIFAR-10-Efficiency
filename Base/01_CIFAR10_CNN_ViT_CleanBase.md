@@ -1,0 +1,1 @@
+## 목표 : CIFAR-10 꺠끗한 데이터에서 CNN vs ViT BaseLine 비교 
