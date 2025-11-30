@@ -45,9 +45,5 @@
 
 > **tip**: 추가로 노트북 02·03을 실행하면 `results/data_efficiency/`와 `results/robustness/`에 CSV가 쌓이며, README의 “주요 결과” 섹션을 확장해 RQ1/RQ2를 정량적으로 보고할 수 있습니다.
 
-## 결론 및 향후 계획
-- **결론 (현재까지)**: 동일한 CIFAR-10 clean 조건에서는 ViT가 훨씬 높은 초기 성능을 제공하지만, CNN은 상대적으로 적은 자원으로도 baseline을 구축할 수 있습니다. 이후 데이터가 부족하거나 corruption이 심해지는 상황에서 두 모델의 간극이 어떻게 변하는지를 확인하는 것이 핵심입니다.
-- **향후 실험**:
-  1. 노트북 02의 `data_ratio` 실험을 실행해 **데이터 효율성 곡선**을 README에 추가.
-  2. 노트북 03의 CIFAR-10-C 평가를 수행하고, severity별 평균 정확도와 corruption-wise bar plot을 README에 삽입.
-  3. 필요 시 간단한 증강/하이퍼파라미터 변형을 적용해 RQ3(robustness 개선 가능성)를 탐색.
+## 결론
+- **결론**: 동일한 CIFAR-10 clean 조건에서는 ViT가 훨씬 높은 초기 성능을 제공하지만, CNN은 상대적으로 적은 자원으로도 baseline을 구축할 수 있습니다. 이후 데이터가 부족하거나 corruption이 심해지는 상황에서 두 모델의 간극이 어떻게 변하는지를 확인하는 것이 핵심입니다.
