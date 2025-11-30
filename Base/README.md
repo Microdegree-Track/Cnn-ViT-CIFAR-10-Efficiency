@@ -1,6 +1,6 @@
 # CNN vs Vision Transformer: CIFAR-10 Clean & Corrupted 실험 
 
-이 레포는 건국대 Microdegree 연구 과제를 정리한 것으로, **CNN(ResNet-18)**과 **Vision Transformer(vit_tiny_patch16_224)**를 대상으로 데이터 효율성과 강인성(Robustness)을 비교하기 위한 실험 파이프라인을 담고 있습니다. 세 노트북과 공통 모듈은 다음 연구 질문을 빠르게 반복 실험할 수 있도록 설계되었습니다.
+이 레포는 건국대 Microdegree 연구 과제를 정리한 것으로, CNN(ResNet-18)과 Vision Transformer(vit_tiny_patch16_224)를 대상으로 데이터 효율성과 강인성(Robustness)을 비교하기 위한 실험 파이프라인을 담고 있습니다. 세 노트북과 공통 모듈은 다음 연구 질문을 빠르게 반복 실험할 수 있도록 설계되었습니다.
 
 - **RQ1.** 학습 데이터 양이 줄어들 때 두 모델의 정확도/손실은 어떻게 변하는가?
 - **RQ2.** 깨끗한 이미지 대비 CIFAR-10-C corruption이 적용된 이미지에서 성능 저하 양상은 어떻게 다른가?
