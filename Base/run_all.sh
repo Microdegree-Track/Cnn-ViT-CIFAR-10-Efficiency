@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 set -euo pipefail
 NOTEBOOKS=(
   "01_CIFAR10_CNN_ViT_CleanBase.ipynb"
