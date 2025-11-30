@@ -9,8 +9,11 @@ from torchvision.models import resnet18, ResNet18_Weights
 
 try:
     import timm
+    HAS_TIMM = True     
 except ImportError:
     timm = None
+    HAS_TIMM = False   
+
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")

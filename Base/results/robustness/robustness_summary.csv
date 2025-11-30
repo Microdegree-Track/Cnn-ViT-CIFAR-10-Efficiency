@@ -1,0 +1,3 @@
+model,mean_accuracy
+cnn,0.709188
+vit,0.740084

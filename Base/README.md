@@ -1,33 +1,39 @@
 # CNN vs Vision Transformer: CIFAR-10 Clean & Corrupted 실험 
 
-이 레포는 건국대 Microdegree 연구 과제를 정리한 것으로, CNN(ResNet-18)과 Vision Transformer(vit_tiny_patch16_224)를 대상으로 데이터 효율성과 강인성(Robustness)을 비교하기 위한 실험 파이프라인을 담고 있습니다. 세 노트북과 공통 모듈은 다음 연구 질문을 빠르게 반복 실험할 수 있도록 설계되었습니다.
+이 레포는 Microdegree (CNN vs Vision Transformer 비교)의 실험 코드를 정리한 것입니다. 세 개의 Jupyter 노트북과 공통 모듈(`cifar_common.py`)을 통해 데이터 효율성과 강인성(Robustness) 관점에서 두 모델을 반복적으로 비교할 수 있도록 구성했습니다.
 
-- **RQ1.** 학습 데이터 양이 줄어들 때 두 모델의 정확도/손실은 어떻게 변하는가?
-- **RQ2.** 깨끗한 이미지 대비 CIFAR-10-C corruption이 적용된 이미지에서 성능 저하 양상은 어떻게 다른가?
-- **RQ3.** 간단한 학습 설정/증강 변화가 각 모델의 robustness에 미치는 영향은 무엇인가?
+## 연구 질문
+1. **RQ1** – 학습 데이터 양이 줄어들 때 두 모델의 정확도/손실은 어떻게 변하는가?
+2. **RQ2** – 깨끗한 테스트셋 대비 CIFAR-10-C corruption에서 성능 저하 양상은 어떻게 다른가?
+3. **RQ3** – 간단한 증강/학습 설정 변경이 각 모델의 robustness를 얼마나 개선시키는가?
 
-## 연구 목적과 필요성
-- Vision Transformer는 대규모 데이터에서 강점을 보이지만, 학부 수준 프로젝트에서는 **데이터/연산 자원이 제한**되는 경우가 많습니다. 따라서 **데이터 효율성**을 정량 비교하는 것이 실용적인 의미를 가집니다.
-- 실제 환경의 이미지는 노이즈·블러·조명 변화 등이 빈번하므로, **깨끗한 데이터에서의 성능만으로 모델을 선택하기 어렵습니다.** 따라서 CIFAR-10-C를 이용해 **robustness 관점**에서 CNN vs ViT를 비교합니다.
-- Microdegree 커리큘럼에서 배운 일반화, 과적합, inductive bias 개념을 실제 코드/실험으로 검증해 보고자 했습니다.
+## 데이터 준비
+| 데이터셋 | 설명 | 준비 방법 |
+| --- | --- | --- |
+| CIFAR-10 | 32×32 컬러 이미지 10클래스 | `torchvision.datasets.CIFAR10`에서 자동 다운로드 (`data/` 하위) |
+| CIFAR-10-C | 노이즈·블러·날씨 등 corruption(15종)×severity(1~5) | [Zenodo #2535967](https://zenodo.org/records/2535967)에서 `CIFAR-10-C.tar` 다운로드 → 압축 해제 후 `data/CIFAR-10-C-1/` 위치에 복사 |
 
-## 연구 방법 요약
-| 구성 | 내용 |
+> `03_CIFAR10_Robustness_CNN_ViT.ipynb`는 `data/CIFAR-10-C-1/labels.npy` 존재 여부를 확인하므로, 위 경로가 정확히 준비돼야 실행이 멈추지 않습니다.
+
+## 환경 세팅 & 실행
+1. (선택) Conda/venv 생성 후 활성화
+2. `pip install -r requirements.txt`
+3. `bash run_all.sh` 또는 노트북을 순서대로 수동 실행
+
+`run_all.sh`는 `jupyter nbconvert --execute --inplace`를 이용해 3개의 노트북을 자동 실행합니다. GPU 없이 CPU만 사용할 경우 실행 시간이 상당히 길 수 있으므로, 필요 시 노트북 안에서 epoch/ratio를 조정하세요.
+
+## 노트북 구성 요약
+| 파일 | 목적 |
 | --- | --- |
-| 데이터 | CIFAR-10 (clean) + CIFAR-10-C (noise/blur/weather, severity 1~5) |
-| 모델 | ResNet-18 (SGD) vs vit_tiny_patch16_224 (AdamW, timm) |
-| 공통 모듈 | `cifar_common.py`에 DataLoader/모델/학습 루틴을 모듈화해 모든 노트북에서 재사용 |
-| 노트북 01 | 깨끗한 CIFAR-10 baseline (epoch 5/10/20, CSV·가중치 저장) |
-| 노트북 02 | `data_ratio` (1.0/0.5/0.2/0.1) 변화에 따른 데이터 효율성 비교 |
-| 노트북 03 | baseline 가중치를 활용해 CIFAR-10-C 상에서 corruption×severity 평가 및 시각화 |
+| `01_CIFAR10_CNN_ViT_CleanBase.ipynb` | CIFAR-10 clean 데이터 기준 CNN vs ViT baseline (epoch 5/10/20) 학습, CSV/가중치 저장 및 학습 곡선 시각화 |
+| `02_CIFAR10_DataEfficiency_CNN_ViT.ipynb` | `data_ratio ∈ {1.0, 0.5, 0.2, 0.1}` 에 따라 두 모델의 데이터 효율성 비교, 결과 CSV/그래프 생성 |
+| `03_CIFAR10_Robustness_CNN_ViT.ipynb` | baseline 가중치를 로드해 CIFAR-10-C corruption×severity에서 정확도 측정, 요약 테이블 및 시각화 생성 |
+| `cifar_common.py/md` | DataLoader/모델 생성/학습 루틴을 모듈화; 문서는 함수별 사용법 설명 |
 
-> **실행 가이드**
-> 1. `Base` 디렉터리에서 conda/pip 환경을 활성화하고 `pip install -r requirements.txt` (필요 시) 진행.
-> 2. `python` 셀을 통해 `cifar_common.py`에 정의된 `set_seed`, `create_cifar10_loaders`, `create_resnet18_cifar`, `create_vit_model`, `train_one_epoch`, `evaluate`를 import.
-> 3. 세 노트북을 순서대로 실행하면 `results/` 폴더에 CSV/모델 가중치, `figures/` 폴더에 그래프가 생성됩니다.
+## 현재 확보된 결과 (RQ1 & RQ2 포함)
 
-## 주요 결과 (현재 저장된 결과 기준)
-아래 표는 `results/baseline/*` CSV로부터 계산한 **최고 test accuracy**입니다.
+### 1) Clean Baseline (CIFAR-10)
+`results/baseline/*` CSV에서 추출한 최고 test accuracy는 아래와 같습니다.
 
 | 모델 | Epoch | Best Test Acc |
 | --- | --- | --- |
@@ -38,12 +44,57 @@
 | ViT | 10 | 93.22% |
 | ViT | 20 | 93.96% |
 
-- ViT는 사전학습 weight를 활용함에도 불구하고 epoch 5부터 이미 CNN 대비 ~24%p 이상 높은 정확도를 보이며, epoch을 늘려도 **성능 향상이 점차 완만**해집니다.
-- CNN은 데이터 효율성이 떨어지지만, epoch을 늘릴수록 꾸준히 개선되는 추세를 보여 **소규모 환경에서 baseline**으로 삼기에 적절합니다.
-
 ![Baseline Accuracy vs Epochs](figures/baseline_accuracy.png)
 
-> **tip**: 추가로 노트북 02·03을 실행하면 `results/data_efficiency/`와 `results/robustness/`에 CSV가 쌓이며, README의 “주요 결과” 섹션을 확장해 RQ1/RQ2를 정량적으로 보고할 수 있습니다.
+### 2) 데이터 효율성 (RQ1)
+`02_CIFAR10_DataEfficiency_CNN_ViT.ipynb`로 train 데이터 비율을 줄여가며 학습한 결과입니다.
 
-## 결론
-- **결론**: 동일한 CIFAR-10 clean 조건에서는 ViT가 훨씬 높은 초기 성능을 제공하지만, CNN은 상대적으로 적은 자원으로도 baseline을 구축할 수 있습니다. 이후 데이터가 부족하거나 corruption이 심해지는 상황에서 두 모델의 간극이 어떻게 변하는지를 확인하는 것이 핵심입니다.
+| 모델 | Train ratio | Best Test Acc |
+| --- | --- | --- |
+| CNN | 1.0 | 78.65% |
+| CNN | 0.5 | 73.10% |
+| CNN | 0.2 | 62.70% |
+| CNN | 0.1 | 51.44% |
+| ViT | 1.0 | 93.96% |
+| ViT | 0.5 | 92.94% |
+| ViT | 0.2 | 91.31% |
+| ViT | 0.1 | 89.07% |
+
+- ViT는 데이터가 10% 수준으로 줄어들어도 89% 이상의 정확도를 유지했습니다.
+- CNN은 데이터 부족 시 빠르게 성능이 하락해 0.1 비율에서 51%까지 떨어졌습니다.
+
+![Data efficiency](figures/data_efficiency.png)
+
+### 3) Robustness (RQ2)
+`03_CIFAR10_Robustness_CNN_ViT.ipynb`는 baseline 가중치를 CIFAR-10-C에 적용해 corruption×severity별 정확도를 측정했습니다.
+
+| Severity | CNN | ViT |
+| --- | --- | --- |
+| 1 | 77.38% | 88.90% |
+| 2 | 74.82% | 82.51% |
+| 3 | 71.27% | 72.74% |
+| 4 | 68.76% | 67.78% |
+| 5 | 62.38% | 58.11% |
+
+- 저강도(severity 1~2)에서는 ViT가 크게 앞서지만, 강도가 올라갈수록 ViT 정확도가 더 빠르게 감소해 severity 4~5에서는 CNN과 비슷하거나 더 낮습니다.
+- Corruption 별로 보면 ViT는 밝기·안개·블러에 강하지만 **gaussian_noise/shot_noise**에서는 CNN보다 취약합니다.
+
+| Corruption (severity=3) | CNN | ViT |
+| --- | --- | --- |
+| brightness | 77.07% | 91.48% |
+| fog | 67.28% | 87.98% |
+| gaussian_noise | 72.29% | 43.63% |
+| motion_blur | 64.70% | 82.34% |
+| shot_noise | 74.99% | 58.28% |
+
+![Robustness vs severity](figures/robustness_severity.png)
+![Corruption-wise accuracy](figures/robustness_corruption_s3.png)
+
+> 전체 평균 정확도: CNN 70.9%, ViT 74.0% (ViT가 전반적으로는 앞서지만 노이즈류에 매우 민감)
+
+## 결론 
+- **결론**
+  - **Baseline 관찰**: ViT는 동일 epoch budget에서 90% 이상의 test accuracy를 즉시 달성하고, CNN은 epoch을 늘릴수록 꾸준히 개선되는 저비용 baseline 역할을 합니다.
+  - **RQ1 결과**: 데이터 비율을 줄이면 CNN 성능이 급격히 저하되는 반면 ViT는 10% 데이터에서도 89% 정확도를 유지해 데이터 효율성 측면에서 명확한 우위를 보였습니다.
+  - **RQ2 결과**: ViT는 조명/안개/블러에는 강하지만 노이즈에는 매우 민감해 severity가 높아지면 CNN과 격차가 줄어듭니다. 현실 환경의 노이즈 특성에 따라 모델 선택 전략이 달라질 수 있음을 시사합니다.
+

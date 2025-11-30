@@ -1,0 +1,9 @@
+# Core dependencies for CIFAR-10 CNN vs ViT experiments
+numpy>=1.21
+pandas>=2.0
+matplotlib>=3.7
+torch>=2.0
+torchvision>=0.15
+timm>=0.9
+jupyter>=1.0
+nbconvert>=7.0
