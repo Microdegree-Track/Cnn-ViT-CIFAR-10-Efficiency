@@ -21,7 +21,7 @@
 3. `bash run_all.sh` 또는 노트북을 순서대로 수동 실행
 
 `run_all.sh`는 `jupyter nbconvert --execute --inplace`를 이용해 3개의 노트북을 자동 실행합니다. GPU 없이 CPU만 사용할 경우 실행 시간이 상당히 길 수 있으므로, 필요 시 노트북 안에서 epoch/ratio를 조정하세요.
-> **실험 하드웨어 참고**: 모든 수치는 NVIDIA GeForce RTX 4090 (CUDA 12.4, Driver 550.163.01, VRAM 24GB) 4-way 서버에서 GPU 0을 주로 사용해 얻었습니다. 다른 GPU/CPU 환경에서도 실행 가능하지만 학습 시간과 세부 정확도는 달라질 수 있습니다.
+> **실험 하드웨어 참고**: 모든 수치는 NVIDIA GeForce RTX 4090 (CUDA 12.4, Driver 550.163.01, VRAM 24GB) 4-way 서버에서 GPU 0을 사용해 얻었습니다. 다른 GPU/CPU 환경에서도 실행 가능하지만 학습 시간과 세부 정확도는 달라질 수 있습니다.
 
 
 ## 노트북 구성 요약
